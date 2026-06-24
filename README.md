@@ -1,94 +1,95 @@
 # VN Fusion Workbench
 
-一个本地优先、可交接的视觉小说 / Galgame 写作工作台。
+面向中文视觉小说 / Galgame 写作的本地工作台。
 
-它不是单纯的“提示词合集”。这个仓库把角色记忆、场景卡、路线图、CSV 剧本、可读稿、引擎导出、Excel 交付表和质量守门工具放在同一套流程里，让另一个 AI 或协作者 clone 后也能从文件重新启动，而不是依赖某台电脑上的聊天记录。
+它把角色记忆、场景卡、路线图、CSV 剧本、可读稿、引擎导出、Excel 交付表和质量检查工具放在一套流程里。AI 或协作者拿到仓库后，可以沿着文件结构理解项目、继续写作、检查交付。
 
-## 这个仓库能做什么
+默认工作语言优先中文。用户明确指定其他语言时，再切换到对应语言。
 
-- 维护角色卡、运行状态、关系记忆和可检索 memory log，减少角色越写越漂。
-- 用 scene card、route map、状态变更和伏笔账本管理 VN 结构。
-- 生成 CSV 剧本、可读稿、Excel 交付表和多引擎草稿。
+## 可以用来做什么
+
+- 写中文视觉小说、Galgame、AVG、互动短篇。
+- 维护角色卡、运行状态、关系记忆和长期 memory log。
+- 用 scene card、route map、状态变更和伏笔账本管理故事结构。
+- 输出 CSV 剧本、中文可读稿、Excel 交付表和多引擎草稿。
 - 导出 WebGAL、Ren'Py、Ink、Yarn Spinner、Godot Dialogue Manager 等格式。
-- 用 validate、deep-audit、quality-debt、handoff guard、encoding guard 和 delivery guard 检查漏项。
-- 内置 portable skills，让 AI 接手时能读仓库里的技能备份，而不是依赖本机 Codex / CC Switch 安装。
+- 检查剧本格式、分支目标、角色记忆、交付完整性、编码问题、AI 腔和上下文加载情况。
 
-## 先看哪里
+## 短篇项目说明
 
-给人看：
+`vn_fusion_workbench/02_projects/` 下面的编号项目，主要是工作台优化过程中的测试文本和流程切片。
 
-```text
-START_HERE.md
-项目结构总览.md
-```
+项目序号基本对应迭代顺序：编号越靠后，越接近当前工作台的写作规范、交付结构和 QA 流程。早期项目保留了旧流程痕迹，适合用来观察工作台的演进。
 
-给 Codex / 其他 AI 看：
+当前最适合作为完整流程参考的是：
 
 ```text
-START_HERE.md
-skills/
-AI_HANDOFF_PACKAGE/handoff_notes/
-vn_fusion_workbench/00_workbench_core/docs/FULL_GENERATION_FLOW_PUBLIC.md
+vn_fusion_workbench/02_projects/020_旧钟楼只在午休响一次
 ```
 
-`skills/` 是最显眼的 portable skill 备份；同一批 skills 也保留在工作台内部和 handoff 包里，供工具链和自动检查使用。
+它包含角色记忆、scene card、route map、CSV 剧本、可读稿、Excel、引擎导出、角色设定和质量报告，可以作为完整交付样例。
 
-## 目录结构
+## 人怎么开始用
+
+最简单的用法就是把这个仓库交给 AI，然后用自然语言说明目标。
+
+可以这样说：
 
 ```text
-VN_Workbench_Project/
-├─ README.md
-├─ START_HERE.md
-├─ GITHUB_UPLOAD_GUIDE.md
-├─ 项目结构总览.md
-├─ skills/                         portable AI skills
-├─ AI_HANDOFF_PACKAGE/             AI 接手说明、状态、镜像
-├─ external_refs/                  可公开的外部参考说明
-└─ vn_fusion_workbench/
-   ├─ 00_workbench_core/           方法、工具、模板、schema
-   ├─ 01_reference_log/            参考研究入口
-   ├─ 02_projects/                 每篇作品的独立项目
-   └─ 06_学习输入/                 学习输入、风格画像和处理区
+请先阅读 START_HERE.md 和 skills/，再按工作台流程帮我写一个新的中文 Galgame 短篇。
 ```
 
-## 快速启动
+```text
+请参考 020_旧钟楼只在午休响一次 的完整交付结构，新建一个随机题材项目，并跑完整检查。
+```
 
-从仓库根目录进入工作台：
+```text
+请打开 vn_fusion_workbench/02_projects/<项目名>，检查它的角色记忆、剧本、交付文件和 QA 报告有没有漏项。
+```
+
+如果你只是想体验流程，可以先让 AI 看这个示例项目：
+
+```text
+vn_fusion_workbench/02_projects/020_旧钟楼只在午休响一次
+```
+
+它是当前最完整的样例。
+
+## AI / 维护者检查命令
+
+这些命令用于确认工作台真的加载了上下文、skills 和检查工具。普通使用者可以让 AI 代跑。
+
+进入工作台目录：
 
 ```powershell
 cd .\vn_fusion_workbench
 ```
 
-查看项目：
+查看已有项目：
 
 ```powershell
 py .\00_workbench_core\tools\vn_workbench.py paths projects
 ```
 
-让 AI 或工具链证明它已经加载工作台上下文：
+加载项目上下文：
 
 ```powershell
 py .\00_workbench_core\tools\vn_context_bootstrap.py --project P020 --task review
 ```
 
-生成或重写场景前：
+写作或重写前，生成 draft session：
 
 ```powershell
 py .\00_workbench_core\tools\vn_workbench.py draft-session --project P020 --scene S001_scene_card.json --draft-name S001_draft
 ```
 
-交付前至少运行：
+交付前检查：
 
 ```powershell
 py .\00_workbench_core\tools\vn_workbench.py validate --project P020 --script <script.csv>
 py .\00_workbench_core\tools\vn_workbench.py deep-audit --project P020 --script <script.csv>
 py .\00_workbench_core\tools\vn_delivery_completeness_guard.py --project P020 --strict
-```
-
-生成 Excel 交付表不需要 Node 依赖：
-
-```powershell
-py .\00_workbench_core\tools\build_excel_template_py.py P020 <script.csv>
+py .\00_workbench_core\tools\vn_handoff_guard.py --target <可读稿.md> --strict
 ```
 
 生成后清理可再生中间产物：
@@ -97,22 +98,66 @@ py .\00_workbench_core\tools\build_excel_template_py.py P020 <script.csv>
 py .\00_workbench_core\tools\vn_workspace_cleanup.py --post-generation
 ```
 
-## 示例切片
-
-仓库里保留了一个完整流程示例：
+## 目录结构
 
 ```text
-vn_fusion_workbench/02_projects/020_旧钟楼只在午休响一次
+VN_Workbench_Project/
+├─ README.md
+├─ START_HERE.md
+├─ 项目结构总览.md
+├─ skills/
+├─ AI_HANDOFF_PACKAGE/
+├─ external_refs/
+└─ vn_fusion_workbench/
+   ├─ 00_workbench_core/
+   ├─ 01_reference_log/
+   ├─ 02_projects/
+   └─ 06_学习输入/
 ```
 
-它包含角色记忆、scene card、route map、CSV 剧本、中文可读稿、Excel 工作簿、引擎导出、角色设定和 QA 报告。新 AI 如果不知道完整交付应该长什么样，可以先对照这个项目。
+常用入口：
 
-## 准备上传 GitHub
+- `START_HERE.md`：人和 AI 接手时的启动入口。
+- `skills/`：随仓库携带的 portable skills。
+- `AI_HANDOFF_PACKAGE/`：给 AI 接手用的状态、规则和镜像。
+- `vn_fusion_workbench/00_workbench_core/`：工具、方法卡、模板、schema 和工作流文档。
+- `vn_fusion_workbench/02_projects/`：短篇项目和流程测试切片。
+- `vn_fusion_workbench/06_学习输入/_风格画像/`：抽象后的公开风格资产。
 
-照着这个文件填：
+## AI 接手流程
+
+先读：
 
 ```text
-GITHUB_UPLOAD_GUIDE.md
+START_HERE.md
+skills/portable_skill_manifest.json
+skills/galgame-workbench-loader/SKILL.md
+AI_HANDOFF_PACKAGE/handoff_notes/WORKBENCH_OPERATING_RULES.md
+vn_fusion_workbench/00_workbench_core/docs/FULL_GENERATION_FLOW_PUBLIC.md
 ```
 
-新建 GitHub 仓库时，不要让 GitHub 自动生成 README、.gitignore 或 license；这个本地仓库已经准备好了对应文件。
+再运行：
+
+```powershell
+cd .\vn_fusion_workbench
+py .\00_workbench_core\tools\vn_context_bootstrap.py --project <Pxxx> --task review
+py .\00_workbench_core\tools\vn_skill_backup_check.py
+```
+
+工作台原则：先读本地文件，再生成内容；先跑检查，再交付。
+
+默认用中文回应和交付。工具名、文件名、引擎格式可以保留英文。
+
+## 写作重点
+
+- 优先中文。角色对白、旁白、心理、交付说明默认使用中文。
+- 开场先给环境、问题、物件、动作或压力，再让人物自然出现。
+- 一行剧本是一个点击单位。
+- 对话可以连续成块，避免长时间机械 A/B/A/B。
+- 心理描写要像角色此刻真的会想的话，可以有停顿、反问、语气词、放松和自我修正。
+- 主题通过选择、物件、状态、关系代价和回调呈现。
+- 完整交付包含可读稿、CSV、Excel、引擎导出、角色设定和 QA 报告。
+
+## License
+
+暂未指定许可证。公开使用、改造或再发布前，请先确认仓库维护者后续补充的授权说明。
